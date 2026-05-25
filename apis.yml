@@ -1,0 +1,106 @@
+aid: appfolio
+name: AppFolio
+description: >-
+  AppFolio is a Santa Barbara, California cloud-based real estate technology
+  company providing property management software to residential, commercial,
+  community association (HOA), student housing, single-family, and affordable
+  housing operators, plus investment management tooling for sponsors and
+  funds. Its flagship AppFolio Performance Platform unifies workflow
+  automation, accounting and reporting, marketing and leasing, maintenance,
+  resident communication, and resident services on a single multi-tenant
+  SaaS. AppFolio embeds Realm-X, an in-house agentic AI layer (Realm-X
+  Assistant, Performers, Flows) directly into the platform rather than as
+  an add-on. Integrations are delivered through the AppFolio Stack
+  marketplace, where certified partners (ButterflyMX, Conservice, HappyCo,
+  Knock, Lowe's, Property Meld, and many more) connect via the AppFolio
+  Stack API. The Stack API is gated behind a partner application,
+  security-compliance questionnaire, and terms-of-service signing; OAuth
+  2.0, a sandbox environment, webhooks, and an OpenAPI/Swagger reference
+  are made available only to approved partners through the
+  developer.appfolio.com portal, so no public specification is reachable
+  for catalog inclusion. AppFolio's revenue model is per-unit SaaS
+  subscription plus value-added services (payments, screening, insurance,
+  marketing). The AppFolio GitHub organization publishes internal Ruby
+  on Rails, React, and tooling libraries (react-gears, ae_page_objects,
+  store_base_sti_class) but no public API SDK, CLI, or OpenAPI artifact.
+type: Index
+position: Provider
+access: 3rd-Party
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Property Management
+  - Real Estate
+  - Residential
+  - Commercial
+  - Community Associations
+  - HOA
+  - Multifamily
+  - Single Family Rentals
+  - Student Housing
+  - Affordable Housing
+  - Investment Management
+  - PropTech
+  - SaaS
+  - Accounting
+  - Leasing
+  - Maintenance
+  - Agentic AI
+  - Realm-X
+  - AppFolio Stack
+url: https://raw.githubusercontent.com/api-evangelist/appfolio/refs/heads/main/apis.yml
+created: '2026-05-25'
+modified: '2026-05-25'
+specificationVersion: '0.20'
+apis: []
+common:
+  - type: Website
+    url: https://www.appfolio.com
+  - type: Products
+    url: https://www.appfolio.com/products
+  - type: PropertyManager
+    url: https://www.appfolio.com/property-manager
+  - type: InvestmentManager
+    url: https://www.appfolio.com/investment-management
+  - type: RealmX
+    url: https://www.appfolio.com/realm-x
+  - type: Stack
+    url: https://www.appfolio.com/stack
+  - type: StackAPI
+    url: https://www.appfolio.com/stack/partners/api
+  - type: BecomePartner
+    url: https://www.appfolio.com/stack/become-a-partner
+  - type: DeveloperPortal
+    url: https://developer.appfolio.com/
+  - type: EngineeringBlog
+    url: https://engineering.appfolio.com/
+  - type: GitHub
+    url: https://github.com/appfolio
+  - type: HelpCenter
+    url: https://helpcenter.appfolio.com/
+  - type: Newsroom
+    url: https://www.appfolio.com/newsroom
+  - type: Blog
+    url: https://www.appfolio.com/blog
+  - type: Pricing
+    url: https://www.appfolio.com/pricing
+  - type: Customers
+    url: https://www.appfolio.com/customers
+  - type: Company
+    url: https://www.appfolio.com/company
+  - type: Careers
+    url: https://www.appfolio.com/careers
+  - type: Contact
+    url: https://www.appfolio.com/contact
+  - type: InvestorRelations
+    url: https://ir.appfolioinc.com/
+  - type: Twitter
+    url: https://twitter.com/appfolio
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/appfolio
+  - type: YouTube
+    url: https://www.youtube.com/@AppFolio
+  - type: Facebook
+    url: https://www.facebook.com/AppFolio
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
