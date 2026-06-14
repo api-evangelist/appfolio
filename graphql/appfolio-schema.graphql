@@ -1,0 +1,1108 @@
+"""
+AppFolio GraphQL Schema
+Conceptual schema modeling the AppFolio property management platform.
+Source: https://developer.appfolio.com/
+"""
+
+# ─── Scalars ────────────────────────────────────────────────────────────────
+
+scalar DateTime
+scalar Date
+scalar Decimal
+scalar JSON
+
+# ─── Enumerations ───────────────────────────────────────────────────────────
+
+enum PropertyType {
+  RESIDENTIAL
+  COMMERCIAL
+  HOA
+  STUDENT_HOUSING
+  SINGLE_FAMILY
+  AFFORDABLE_HOUSING
+  MIXED_USE
+}
+
+enum UnitType {
+  STUDIO
+  ONE_BEDROOM
+  TWO_BEDROOM
+  THREE_BEDROOM
+  FOUR_BEDROOM_PLUS
+  COMMERCIAL_SUITE
+  RETAIL
+  STORAGE
+}
+
+enum UnitStatus {
+  OCCUPIED
+  VACANT
+  NOTICE_GIVEN
+  PENDING_MOVE_IN
+  OFFLINE
+}
+
+enum LeaseStatus {
+  ACTIVE
+  EXPIRED
+  TERMINATED
+  PENDING
+  MONTH_TO_MONTH
+}
+
+enum LeaseType {
+  RESIDENTIAL
+  COMMERCIAL
+  STUDENT
+  AFFORDABLE
+  SHORT_TERM
+}
+
+enum MaintenanceStatus {
+  OPEN
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum MaintenanceCategory {
+  PLUMBING
+  ELECTRICAL
+  HVAC
+  APPLIANCE
+  STRUCTURAL
+  LANDSCAPING
+  PEST_CONTROL
+  CLEANING
+  GENERAL
+  OTHER
+}
+
+enum WorkOrderStatus {
+  CREATED
+  ASSIGNED
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  INVOICED
+  CANCELLED
+}
+
+enum VendorType {
+  CONTRACTOR
+  SUPPLIER
+  UTILITY
+  PROFESSIONAL_SERVICES
+  OTHER
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  PAID
+  VOIDED
+  OVERDUE
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  RETURNED
+  VOIDED
+}
+
+enum PaymentMethod {
+  ACH
+  CHECK
+  CREDIT_CARD
+  DEBIT_CARD
+  CASH
+  MONEY_ORDER
+  WIRE
+}
+
+enum ApplicationStatus {
+  RECEIVED
+  IN_REVIEW
+  SCREENING
+  CONDITIONALLY_APPROVED
+  APPROVED
+  DENIED
+  WITHDRAWN
+}
+
+enum WebhookEventType {
+  LEASE_CREATED
+  LEASE_UPDATED
+  LEASE_TERMINATED
+  PAYMENT_RECEIVED
+  MAINTENANCE_REQUEST_CREATED
+  MAINTENANCE_REQUEST_UPDATED
+  WORK_ORDER_CREATED
+  WORK_ORDER_COMPLETED
+  APPLICATION_SUBMITTED
+  APPLICATION_STATUS_CHANGED
+  UNIT_VACATED
+  OWNER_STATEMENT_GENERATED
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+  ADJUSTMENT
+  REFUND
+}
+
+enum MoveType {
+  MOVE_IN
+  MOVE_OUT
+  TRANSFER
+}
+
+enum DocumentType {
+  LEASE
+  ADDENDUM
+  NOTICE
+  INSPECTION_REPORT
+  APPLICATION
+  IDENTITY
+  INSURANCE
+  OTHER
+}
+
+# ─── Address ─────────────────────────────────────────────────────────────────
+
+type PropertyAddress {
+  street: String!
+  street2: String
+  city: String!
+  state: String!
+  zip: String!
+  country: String
+  latitude: Float
+  longitude: Float
+}
+
+# ─── Property ────────────────────────────────────────────────────────────────
+
+type Property {
+  id: ID!
+  name: String!
+  type: PropertyType!
+  address: PropertyAddress!
+  details: PropertyDetails
+  units: [Unit!]!
+  owner: Owner
+  portfolio: Portfolio
+  totalUnits: Int!
+  occupiedUnits: Int!
+  vacantUnits: Int!
+  maintenanceRequests(status: MaintenanceStatus): [MaintenanceRequest!]!
+  documents: [Document!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type PropertyDetails {
+  propertyId: ID!
+  yearBuilt: Int
+  squareFootage: Int
+  description: String
+  amenities: [String!]
+  parkingType: String
+  petPolicy: String
+  laundryType: String
+  utilitiesIncluded: [String!]
+  managedSince: Date
+  taxParcelId: String
+  zoning: String
+  insurancePolicyNumber: String
+}
+
+# ─── Unit ─────────────────────────────────────────────────────────────────────
+
+type Unit {
+  id: ID!
+  property: Property!
+  unitNumber: String!
+  type: UnitType!
+  status: UnitStatus!
+  details: UnitDetails
+  rent: UnitRent
+  currentLease: Lease
+  leaseHistory: [Lease!]!
+  maintenanceRequests(status: MaintenanceStatus): [MaintenanceRequest!]!
+  vacancy: Vacancy
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type UnitDetails {
+  unitId: ID!
+  bedrooms: Int
+  bathrooms: Float
+  squareFootage: Int
+  floor: Int
+  furnished: Boolean
+  accessibleUnit: Boolean
+  balcony: Boolean
+  petFriendly: Boolean
+  parking: String
+  description: String
+}
+
+type UnitRent {
+  unitId: ID!
+  marketRent: Decimal!
+  scheduledRent: Decimal
+  subsidizedRent: Decimal
+  lateFee: Decimal
+  nsfFee: Decimal
+  rentDueDay: Int
+  lastUpdated: DateTime!
+}
+
+# ─── Lease ────────────────────────────────────────────────────────────────────
+
+type Lease {
+  id: ID!
+  unit: Unit!
+  status: LeaseStatus!
+  type: LeaseType!
+  details: LeaseDetails!
+  terms: LeaseTerms!
+  tenants: [Tenant!]!
+  coTenants: [CoTenant!]!
+  documents: [LeaseDocument!]!
+  payments: [Payment!]!
+  moveIn: Move
+  moveOut: Move
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type LeaseDetails {
+  leaseId: ID!
+  startDate: Date!
+  endDate: Date
+  executedDate: Date
+  terminationDate: Date
+  terminationReason: String
+  noticeGivenDate: Date
+  noticeRequired: Int
+}
+
+type LeaseTerms {
+  leaseId: ID!
+  rentAmount: Decimal!
+  securityDeposit: Decimal
+  petDeposit: Decimal
+  otherDeposit: Decimal
+  lateFeeAmount: Decimal
+  lateFeeGracePeriod: Int
+  rentDueDay: Int
+  autoRenewal: Boolean
+  renewalNoticeDays: Int
+  rentIncreasePercent: Decimal
+}
+
+# ─── Tenant ───────────────────────────────────────────────────────────────────
+
+type Tenant {
+  id: ID!
+  lease: Lease!
+  profile: TenantProfile!
+  details: TenantDetails
+  payments: [Payment!]!
+  maintenanceRequests: [MaintenanceRequest!]!
+  documents: [Document!]!
+  notes: [Note!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type TenantProfile {
+  tenantId: ID!
+  firstName: String!
+  lastName: String!
+  email: String
+  phone: String
+  alternatePhone: String
+  dateOfBirth: Date
+  emergencyContactName: String
+  emergencyContactPhone: String
+  preferredLanguage: String
+  communicationPreferences: [String!]
+}
+
+type TenantDetails {
+  tenantId: ID!
+  employerName: String
+  employerPhone: String
+  monthlyIncome: Decimal
+  ssn: String
+  driversLicense: String
+  driversLicenseState: String
+  vehicles: [String!]
+  pets: [String!]
+}
+
+type CoTenant {
+  id: ID!
+  lease: Lease!
+  firstName: String!
+  lastName: String!
+  email: String
+  phone: String
+  type: String
+  relationship: String
+}
+
+# ─── Owner ────────────────────────────────────────────────────────────────────
+
+type Owner {
+  id: ID!
+  details: OwnerDetails!
+  properties: [Property!]!
+  bankAccounts: [BankAccount!]!
+  statements: [OwnerStatement!]!
+  documents: [Document!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type OwnerDetails {
+  ownerId: ID!
+  firstName: String
+  lastName: String
+  companyName: String
+  email: String!
+  phone: String
+  alternatePhone: String
+  address: PropertyAddress
+  taxId: String
+  ownershipPercentage: Decimal
+  distributionMethod: String
+  distributionSchedule: String
+}
+
+type OwnerStatement {
+  id: ID!
+  owner: Owner!
+  property: Property
+  periodStart: Date!
+  periodEnd: Date!
+  totalIncome: Decimal!
+  totalExpenses: Decimal!
+  netOperatingIncome: Decimal!
+  ownerDraw: Decimal
+  managementFee: Decimal
+  beginningBalance: Decimal
+  endingBalance: Decimal
+  transactions: [Transaction!]!
+  generatedAt: DateTime!
+}
+
+# ─── Maintenance ─────────────────────────────────────────────────────────────
+
+type MaintenanceRequest {
+  id: ID!
+  property: Property!
+  unit: Unit
+  tenant: Tenant
+  category: MaintenanceCategory!
+  status: MaintenanceStatus!
+  details: MaintenanceDetails!
+  workOrder: WorkOrder
+  attachments: [Attachment!]!
+  notes: [Note!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type MaintenanceDetails {
+  requestId: ID!
+  title: String!
+  description: String!
+  priority: String!
+  permissionToEnter: Boolean
+  preferredContactMethod: String
+  preferredTime: String
+  estimatedCost: Decimal
+  actualCost: Decimal
+  completedAt: DateTime
+  resolutionNotes: String
+}
+
+type WorkOrder {
+  id: ID!
+  maintenanceRequest: MaintenanceRequest
+  property: Property!
+  unit: Unit
+  vendor: Vendor
+  status: WorkOrderStatus!
+  details: WorkOrderDetails!
+  invoices: [Invoice!]!
+  attachments: [Attachment!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type WorkOrderDetails {
+  workOrderId: ID!
+  title: String!
+  description: String!
+  scheduledDate: DateTime
+  completedDate: DateTime
+  estimatedCost: Decimal
+  actualCost: Decimal
+  laborHours: Decimal
+  internalNotes: String
+  vendorNotes: String
+}
+
+# ─── Vendor ───────────────────────────────────────────────────────────────────
+
+type Vendor {
+  id: ID!
+  details: VendorDetails!
+  type: VendorType!
+  workOrders: [WorkOrder!]!
+  invoices: [Invoice!]!
+  documents: [Document!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type VendorDetails {
+  vendorId: ID!
+  companyName: String!
+  contactName: String
+  email: String
+  phone: String
+  address: PropertyAddress
+  licenseNumber: String
+  insurancePolicyNumber: String
+  insuranceExpiration: Date
+  taxId: String
+  paymentTerms: String
+  notes: String
+  active: Boolean!
+}
+
+# ─── Financials ───────────────────────────────────────────────────────────────
+
+type Invoice {
+  id: ID!
+  vendor: Vendor
+  property: Property
+  workOrder: WorkOrder
+  status: InvoiceStatus!
+  details: InvoiceDetails!
+  lineItems: [InvoiceLineItem!]!
+  payments: [Payment!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type InvoiceDetails {
+  invoiceId: ID!
+  invoiceNumber: String
+  invoiceDate: Date!
+  dueDate: Date
+  description: String
+  subtotal: Decimal!
+  taxAmount: Decimal
+  totalAmount: Decimal!
+  paidAmount: Decimal
+  balanceDue: Decimal
+  notes: String
+  approvedBy: String
+  approvedAt: DateTime
+}
+
+type InvoiceLineItem {
+  id: ID!
+  invoice: Invoice!
+  description: String!
+  quantity: Decimal!
+  unitPrice: Decimal!
+  total: Decimal!
+  glAccount: String
+  category: String
+}
+
+type Payment {
+  id: ID!
+  lease: Lease
+  tenant: Tenant
+  invoice: Invoice
+  status: PaymentStatus!
+  method: PaymentMethod!
+  details: PaymentDetails!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type PaymentDetails {
+  paymentId: ID!
+  amount: Decimal!
+  paymentDate: Date!
+  effectiveDate: Date
+  description: String
+  reference: String
+  memo: String
+  checkNumber: String
+  bankAccount: BankAccount
+  processedAt: DateTime
+  failureReason: String
+  returnedAt: DateTime
+}
+
+type Deposit {
+  id: ID!
+  lease: Lease!
+  tenant: Tenant!
+  details: DepositDetails!
+  transactions: [Transaction!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type DepositDetails {
+  depositId: ID!
+  depositType: String!
+  amount: Decimal!
+  heldAt: String
+  interestBearing: Boolean
+  returnedAmount: Decimal
+  returnedAt: DateTime
+  deductions: [JSON]
+  notes: String
+}
+
+type Transaction {
+  id: ID!
+  property: Property
+  bankAccount: BankAccount
+  type: TransactionType!
+  details: TransactionDetails!
+  createdAt: DateTime!
+}
+
+type TransactionDetails {
+  transactionId: ID!
+  date: Date!
+  amount: Decimal!
+  description: String!
+  reference: String
+  glAccount: String
+  category: String
+  reconciled: Boolean!
+  reconciledAt: DateTime
+  memo: String
+}
+
+type BankAccount {
+  id: ID!
+  property: Property
+  owner: Owner
+  accountName: String!
+  bankName: String!
+  accountNumberLast4: String
+  routingNumber: String
+  accountType: String!
+  active: Boolean!
+  reconciliations: [Reconciliation!]!
+  createdAt: DateTime!
+}
+
+type Reconciliation {
+  id: ID!
+  bankAccount: BankAccount!
+  statementDate: Date!
+  statementBalance: Decimal!
+  reconciledBalance: Decimal!
+  difference: Decimal!
+  completed: Boolean!
+  completedAt: DateTime
+  completedBy: String
+  transactions: [Transaction!]!
+}
+
+# ─── Applications and Screening ───────────────────────────────────────────────
+
+type ApplicationDetails {
+  id: ID!
+  unit: Unit!
+  property: Property!
+  status: ApplicationStatus!
+  applicants: [Applicant!]!
+  screening: Screening
+  documents: [Document!]!
+  desiredMoveInDate: Date
+  desiredLeaseTermMonths: Int
+  notes: String
+  submittedAt: DateTime!
+  decidedAt: DateTime
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type Applicant {
+  id: ID!
+  application: ApplicationDetails!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String
+  dateOfBirth: Date
+  ssn: String
+  monthlyIncome: Decimal
+  employerName: String
+  isPrimary: Boolean!
+  screening: Screening
+}
+
+type Screening {
+  id: ID!
+  applicant: Applicant!
+  requestedAt: DateTime!
+  completedAt: DateTime
+  creditScore: Int
+  creditResult: String
+  backgroundResult: String
+  evictionResult: String
+  incomeVerificationResult: String
+  overallResult: String
+  reportUrl: String
+}
+
+# ─── Documents ────────────────────────────────────────────────────────────────
+
+type Document {
+  id: ID!
+  details: DocumentDetails!
+  attachments: [Attachment!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type DocumentDetails {
+  documentId: ID!
+  name: String!
+  type: DocumentType!
+  description: String
+  fileSize: Int
+  mimeType: String
+  uploadedBy: String
+  associatedEntityType: String
+  associatedEntityId: ID
+  expirationDate: Date
+  signed: Boolean
+  signedAt: DateTime
+}
+
+type LeaseDocument {
+  id: ID!
+  lease: Lease!
+  details: DocumentDetails!
+  signatories: [String!]
+  allSigned: Boolean!
+  createdAt: DateTime!
+}
+
+# ─── Move ─────────────────────────────────────────────────────────────────────
+
+type Move {
+  id: ID!
+  lease: Lease!
+  unit: Unit!
+  type: MoveType!
+  details: MoveDetails!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type MoveDetails {
+  moveId: ID!
+  scheduledDate: Date!
+  actualDate: Date
+  inspectionCompleted: Boolean!
+  inspectionDate: DateTime
+  inspectorName: String
+  moveInCondition: String
+  moveOutCondition: String
+  chargesApplied: [JSON]
+  notes: String
+}
+
+# ─── Vacancy ──────────────────────────────────────────────────────────────────
+
+type Vacancy {
+  id: ID!
+  unit: Unit!
+  details: VacancyDetails!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type VacancyDetails {
+  vacancyId: ID!
+  availableDate: Date!
+  listedDate: Date
+  listedRent: Decimal
+  marketRent: Decimal
+  daysVacant: Int!
+  showingAvailable: Boolean
+  listingDescription: String
+  listingPhotos: [String!]
+  activeApplications: Int
+}
+
+# ─── Reports ──────────────────────────────────────────────────────────────────
+
+type Report {
+  id: ID!
+  details: ReportDetails!
+  generatedAt: DateTime!
+  data: JSON
+}
+
+type ReportDetails {
+  reportId: ID!
+  name: String!
+  type: String!
+  description: String
+  periodStart: Date
+  periodEnd: Date
+  propertyId: ID
+  ownerId: ID
+  filters: JSON
+  format: String
+  downloadUrl: String
+}
+
+# ─── Portfolio ────────────────────────────────────────────────────────────────
+
+type Portfolio {
+  id: ID!
+  details: PortfolioDetails!
+  properties: [Property!]!
+  owners: [Owner!]!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type PortfolioDetails {
+  portfolioId: ID!
+  name: String!
+  description: String
+  totalUnits: Int!
+  occupancyRate: Decimal
+  totalRevenue: Decimal
+  managementCompany: String
+}
+
+# ─── Shared Supporting Types ──────────────────────────────────────────────────
+
+type Contact {
+  id: ID!
+  firstName: String
+  lastName: String
+  companyName: String
+  email: String
+  phone: String
+  address: PropertyAddress
+  type: String
+  notes: String
+}
+
+type Note {
+  id: ID!
+  content: String!
+  authorName: String!
+  entityType: String
+  entityId: ID
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type Attachment {
+  id: ID!
+  fileName: String!
+  fileSize: Int
+  mimeType: String
+  url: String!
+  uploadedBy: String
+  uploadedAt: DateTime!
+  entityType: String
+  entityId: ID
+}
+
+# ─── Auth and Integrations ────────────────────────────────────────────────────
+
+type APIKey {
+  id: ID!
+  name: String!
+  keyPrefix: String!
+  scopes: [String!]!
+  active: Boolean!
+  lastUsedAt: DateTime
+  expiresAt: DateTime
+  createdAt: DateTime!
+}
+
+type Token {
+  id: ID!
+  accessToken: String!
+  tokenType: String!
+  expiresIn: Int!
+  expiresAt: DateTime!
+  scopes: [String!]!
+  issuedAt: DateTime!
+}
+
+type Webhook {
+  id: ID!
+  url: String!
+  eventTypes: [WebhookEventType!]!
+  active: Boolean!
+  secret: String
+  headers: JSON
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+}
+
+type WebhookEvent {
+  id: ID!
+  webhook: Webhook!
+  eventType: WebhookEventType!
+  payload: JSON!
+  deliveredAt: DateTime
+  responseStatus: Int
+  attempts: Int!
+  lastAttemptAt: DateTime
+  createdAt: DateTime!
+}
+
+# ─── Queries ──────────────────────────────────────────────────────────────────
+
+type Query {
+  property(id: ID!): Property
+  properties(portfolioId: ID, type: PropertyType, ownerId: ID, limit: Int, offset: Int): [Property!]!
+
+  unit(id: ID!): Unit
+  units(propertyId: ID!, status: UnitStatus, type: UnitType, limit: Int, offset: Int): [Unit!]!
+
+  lease(id: ID!): Lease
+  leases(propertyId: ID, unitId: ID, status: LeaseStatus, limit: Int, offset: Int): [Lease!]!
+
+  tenant(id: ID!): Tenant
+  tenants(leaseId: ID, propertyId: ID, limit: Int, offset: Int): [Tenant!]!
+
+  owner(id: ID!): Owner
+  owners(portfolioId: ID, limit: Int, offset: Int): [Owner!]!
+
+  ownerStatement(id: ID!): OwnerStatement
+  ownerStatements(ownerId: ID!, periodStart: Date, periodEnd: Date): [OwnerStatement!]!
+
+  maintenanceRequest(id: ID!): MaintenanceRequest
+  maintenanceRequests(propertyId: ID, unitId: ID, status: MaintenanceStatus, category: MaintenanceCategory, limit: Int, offset: Int): [MaintenanceRequest!]!
+
+  workOrder(id: ID!): WorkOrder
+  workOrders(propertyId: ID, vendorId: ID, status: WorkOrderStatus, limit: Int, offset: Int): [WorkOrder!]!
+
+  vendor(id: ID!): Vendor
+  vendors(type: VendorType, active: Boolean, limit: Int, offset: Int): [Vendor!]!
+
+  invoice(id: ID!): Invoice
+  invoices(vendorId: ID, propertyId: ID, status: InvoiceStatus, limit: Int, offset: Int): [Invoice!]!
+
+  payment(id: ID!): Payment
+  payments(leaseId: ID, tenantId: ID, status: PaymentStatus, limit: Int, offset: Int): [Payment!]!
+
+  deposit(id: ID!): Deposit
+  deposits(leaseId: ID, limit: Int, offset: Int): [Deposit!]!
+
+  transaction(id: ID!): Transaction
+  transactions(propertyId: ID, bankAccountId: ID, type: TransactionType, startDate: Date, endDate: Date, limit: Int, offset: Int): [Transaction!]!
+
+  bankAccount(id: ID!): BankAccount
+  bankAccounts(propertyId: ID, ownerId: ID, limit: Int, offset: Int): [BankAccount!]!
+
+  reconciliation(id: ID!): Reconciliation
+  reconciliations(bankAccountId: ID!, limit: Int, offset: Int): [Reconciliation!]!
+
+  application(id: ID!): ApplicationDetails
+  applications(propertyId: ID, unitId: ID, status: ApplicationStatus, limit: Int, offset: Int): [ApplicationDetails!]!
+
+  document(id: ID!): Document
+  documents(entityType: String, entityId: ID, type: DocumentType, limit: Int, offset: Int): [Document!]!
+
+  vacancy(id: ID!): Vacancy
+  vacancies(propertyId: ID, availableAfter: Date, limit: Int, offset: Int): [Vacancy!]!
+
+  report(id: ID!): Report
+  reports(propertyId: ID, type: String, limit: Int, offset: Int): [Report!]!
+
+  portfolio(id: ID!): Portfolio
+  portfolios(limit: Int, offset: Int): [Portfolio!]!
+
+  webhook(id: ID!): Webhook
+  webhooks(active: Boolean, limit: Int, offset: Int): [Webhook!]!
+
+  apiKeys(active: Boolean): [APIKey!]!
+}
+
+# ─── Mutations ────────────────────────────────────────────────────────────────
+
+type Mutation {
+  createMaintenanceRequest(input: CreateMaintenanceRequestInput!): MaintenanceRequest!
+  updateMaintenanceRequest(id: ID!, input: UpdateMaintenanceRequestInput!): MaintenanceRequest!
+  closeMaintenanceRequest(id: ID!, resolutionNotes: String): MaintenanceRequest!
+
+  createWorkOrder(input: CreateWorkOrderInput!): WorkOrder!
+  updateWorkOrder(id: ID!, input: UpdateWorkOrderInput!): WorkOrder!
+  completeWorkOrder(id: ID!, notes: String): WorkOrder!
+
+  createLease(input: CreateLeaseInput!): Lease!
+  updateLease(id: ID!, input: UpdateLeaseInput!): Lease!
+  terminateLease(id: ID!, terminationDate: Date!, reason: String): Lease!
+  renewLease(id: ID!, newEndDate: Date!, newRentAmount: Decimal): Lease!
+
+  recordPayment(input: RecordPaymentInput!): Payment!
+  voidPayment(id: ID!, reason: String!): Payment!
+
+  createInvoice(input: CreateInvoiceInput!): Invoice!
+  approveInvoice(id: ID!): Invoice!
+  voidInvoice(id: ID!, reason: String!): Invoice!
+
+  createWebhook(input: CreateWebhookInput!): Webhook!
+  updateWebhook(id: ID!, input: UpdateWebhookInput!): Webhook!
+  deleteWebhook(id: ID!): Boolean!
+
+  generateOwnerStatement(ownerId: ID!, propertyId: ID, periodStart: Date!, periodEnd: Date!): OwnerStatement!
+  generateReport(input: GenerateReportInput!): Report!
+}
+
+# ─── Input Types ──────────────────────────────────────────────────────────────
+
+input CreateMaintenanceRequestInput {
+  propertyId: ID!
+  unitId: ID
+  tenantId: ID
+  category: MaintenanceCategory!
+  title: String!
+  description: String!
+  priority: String!
+  permissionToEnter: Boolean
+  preferredContactMethod: String
+  preferredTime: String
+}
+
+input UpdateMaintenanceRequestInput {
+  category: MaintenanceCategory
+  title: String
+  description: String
+  priority: String
+  status: MaintenanceStatus
+  resolutionNotes: String
+}
+
+input CreateWorkOrderInput {
+  maintenanceRequestId: ID
+  propertyId: ID!
+  unitId: ID
+  vendorId: ID
+  title: String!
+  description: String!
+  scheduledDate: DateTime
+  estimatedCost: Decimal
+}
+
+input UpdateWorkOrderInput {
+  vendorId: ID
+  scheduledDate: DateTime
+  status: WorkOrderStatus
+  actualCost: Decimal
+  laborHours: Decimal
+  internalNotes: String
+  vendorNotes: String
+}
+
+input CreateLeaseInput {
+  unitId: ID!
+  leaseType: LeaseType!
+  startDate: Date!
+  endDate: Date
+  rentAmount: Decimal!
+  securityDeposit: Decimal
+  tenantIds: [ID!]!
+}
+
+input UpdateLeaseInput {
+  endDate: Date
+  rentAmount: Decimal
+  terms: JSON
+}
+
+input RecordPaymentInput {
+  leaseId: ID
+  tenantId: ID
+  invoiceId: ID
+  amount: Decimal!
+  paymentDate: Date!
+  method: PaymentMethod!
+  reference: String
+  memo: String
+  checkNumber: String
+}
+
+input CreateInvoiceInput {
+  vendorId: ID!
+  propertyId: ID
+  workOrderId: ID
+  invoiceDate: Date!
+  dueDate: Date
+  description: String
+  lineItems: [InvoiceLineItemInput!]!
+}
+
+input InvoiceLineItemInput {
+  description: String!
+  quantity: Decimal!
+  unitPrice: Decimal!
+  glAccount: String
+  category: String
+}
+
+input CreateWebhookInput {
+  url: String!
+  eventTypes: [WebhookEventType!]!
+  secret: String
+  headers: JSON
+}
+
+input UpdateWebhookInput {
+  url: String
+  eventTypes: [WebhookEventType]
+  active: Boolean
+  headers: JSON
+}
+
+input GenerateReportInput {
+  name: String!
+  type: String!
+  periodStart: Date
+  periodEnd: Date
+  propertyId: ID
+  ownerId: ID
+  filters: JSON
+  format: String
+}
