@@ -20,9 +20,20 @@ description: AppFolio is a Santa Barbara, California cloud-based real estate tec
   and tooling libraries (react-gears, ae_page_objects, store_base_sti_class) but no
   public API SDK, CLI, or OpenAPI artifact.
 type: Index
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
 position: Provider
 access: 3rd-Party
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/appfolio.png
 tags:
 - Property Management
 - Real Estate
