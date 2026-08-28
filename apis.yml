@@ -20,6 +20,17 @@ description: AppFolio is a Santa Barbara, California cloud-based real estate tec
   and tooling libraries (react-gears, ae_page_objects, store_base_sti_class) but no
   public API SDK, CLI, or OpenAPI artifact.
 type: Index
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: unknown
