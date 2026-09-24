@@ -47,7 +47,7 @@ access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/appfolio.png
 tags:
 - Property Management
-- Real-Estate
+- Real Estate
 - Residential
 - Commercial
 - Community Associations
@@ -62,7 +62,7 @@ tags:
 - Accounting
 - Leasing
 - Maintenance
-- Agentic AI
+- AI Agents
 - Realm-X
 - AppFolio Stack
 tags_raw:
@@ -85,6 +85,7 @@ tags_raw:
 - Agentic AI
 - Realm-X
 - AppFolio Stack
+- Real-Estate
 url: https://raw.githubusercontent.com/api-evangelist/appfolio/refs/heads/main/apis.yml
 created: '2026-05-25'
 modified: '2026-05-25'
@@ -141,8 +142,6 @@ common:
   url: https://www.youtube.com/@AppFolio
 - type: Facebook
   url: https://www.facebook.com/AppFolio
-- url: graphql/appfolio-graphql.md
-  type: GraphQL
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
