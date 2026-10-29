@@ -1,4 +1,4 @@
-# appfolio
+# AppFolio
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,4 +64,102 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-AppFolio — cloud property management software for residential, commercial, and community associations
+AppFolio is a Santa Barbara, California cloud-based real estate technology company providing property management software to residential, commercial, community association (HOA), student housing, single-family, and affordable housing operators, plus investment management tooling for sponsors and funds. Its flagship AppFolio Performance Platform unifies workflow automation, accounting and reporting, marketing and leasing, maintenance, resident communication, and resident services on a single multi-tenant SaaS. AppFolio embeds Realm-X, an in-house agentic AI layer (Realm-X Assistant, Performers, Flows) directly into the platform rather than as an add-on. Integrations are delivered through the AppFolio Stack marketplace, where certified partners (ButterflyMX, Conservice, HappyCo, Knock, Lowe's, Property Meld, and many more) connect via the AppFolio Stack API. The Stack API is gated behind a partner application, security-compliance questionnaire, and terms-of-service signing; OAuth 2.0, a sandbox environment, webhooks, and an OpenAPI/Swagger reference are made available only to approved partners through the developer.appfolio.com portal, so no public specification is reachable for catalog inclusion. AppFolio's revenue model is per-unit SaaS subscription plus value-added services (payments, screening, insurance, marketing). The AppFolio GitHub organization publishes internal Ruby on Rails, React, and tooling libraries (react-gears, ae_page_objects, store_base_sti_class) but no public API SDK, CLI, or OpenAPI artifact.
+
+**Areas:** Property Management · Real Estate · Residential · Commercial · Community Associations · HOA · Multifamily · Single-Family Rental · Student Housing · Affordable Housing · Investment Management · PropTech
+
+## AppFolio on APIs.io
+
+Everything profiled for AppFolio is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/appfolio/](https://apis.io/providers/appfolio/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [AppFolio Stack API](https://apis.io/apis/appfolio/appfolio-stack-api/) — Partner integration API for the AppFolio Performance Platform, covering resources such as attachments, bank accounts, bills, charges, properties, units,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### GraphQL (1)
+
+GraphQL schemas.
+
+- [Moved to /providers/appfolio/](https://apis.io/graphqls/appfolio/appfolio-graphql/)
+
+#### Security (1)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Appfolio Domain Security](https://apis.io/security/appfolio/appfolio-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Appfolio Plans Pricing](https://apis.io/plans/appfolio/appfolio-plans-pricing/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.appfolio.com)
+- [Pricing](https://www.appfolio.com/pricing)
+- [Support](https://www.appfolio.com/help/owner)
+- [Blog](https://www.appfolio.com/blog)
+- [Trust centre](https://www.appfolio.com/trust/)
+- [Terms of service](https://www.appfolio.com/terms)
+- [Privacy policy](https://www.appfolio.com/privacy)
+- [Status](https://status.appfolio.com/)
+
+## API Evangelist rating
+
+**Kin Score 29.3** — thin · rubric 0.24.0 · scored 2026-10-20
+
+| Facet | Score |
+|---|---|
+| Discoverability | 59.8 |
+| Contract quality | 0.0 |
+| Contract governance | 0.0 |
+| Operational transparency | 21.1 |
+| Developer ergonomics | 21.4 |
+| Access clarity | 81.1 |
+
+**Agent readiness 0.0** — human-only
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | — |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 18.6** — Education & Research
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/appfolio/](https://apis.io/providers/appfolio/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for AppFolio: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/appfolio/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
